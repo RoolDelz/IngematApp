@@ -1,0 +1,52 @@
+﻿@model IngematApp.Models.Formato
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-warning text-dark">
+                    <h4 class="mb-0 fw-bold">Editar Formato</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit" method="post">
+                        <input type="hidden" asp-for="IdFormato" />
+
+                        <div class="mb-3">
+                            <label asp-for="IdCategoria" class="form-label fw-bold">Categoría Padre</label>
+                            <select asp-for="IdCategoria" class="form-select" required>
+                                <option value="">-- Seleccione --</option>
+                                @foreach (var cat in ViewBag.Categorias)
+                                {
+                                    // Esta lógica C# en Razor pre-selecciona la categoría que le pertenece
+                                    if (Model.IdCategoria == cat.IdCategoria)
+                                    {
+                                        <option value="@cat.IdCategoria" selected>@cat.NomCategoria</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@cat.IdCategoria">@cat.NomCategoria</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="NomFormato" class="form-label fw-bold">Nombre del Formato</label>
+                            <input asp-for="NomFormato" class="form-control" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="PrecioFormato" class="form-label fw-bold">Precio (S/)</label>
+                            <input asp-for="PrecioFormato" type="number" step="0.01" class="form-control" required />
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                            <button type="submit" class="btn btn-warning fw-bold">Actualizar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

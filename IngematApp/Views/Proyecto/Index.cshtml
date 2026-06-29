@@ -1,0 +1,154 @@
+@model IngematApp.Models.ProyectoIndexViewModel
+@{
+    ViewData["Title"] = "Gestión de Proyectos";
+}
+
+<div class="container mt-4">
+    <h2 class="fw-bold text-primary mb-2"><i class="bi bi-briefcase"></i> Gestión de Proyectos</h2>
+    <p class="text-muted mb-4">Seguimiento del avance de los proyectos y sus Órdenes de Trabajo.</p>
+
+    @* ============================================ *@
+    @* SECCIÓN 1: PROYECTOS ACTIVOS                 *@
+    @* ============================================ *@
+    <div class="card shadow-sm border-primary mb-4">
+        <div class="card-header bg-primary text-white fw-bold">
+            <i class="bi bi-folder2-open"></i> Proyectos Activos
+        </div>
+        <div class="card-body p-0">
+            @if (Model.Activos.Any())
+            {
+                @foreach (var p in Model.Activos)
+                {
+                    var porcentaje = p.TotalOTs > 0 ? (int)((double)p.OTsCompletadas / p.TotalOTs * 100) : 0;
+                    var barColor = porcentaje == 100 ? "bg-success" : porcentaje >= 50 ? "bg-info" : "bg-warning";
+
+                    <div class="border-bottom px-4 py-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="flex-grow-1">
+                                <h6 class="fw-bold mb-1 text-dark">
+                                    <i class="bi bi-folder me-1 text-primary"></i> @p.NomProyecto
+                                </h6>
+                                <small class="text-muted">
+                                    <i class="bi bi-calendar3 me-1"></i> @p.FechaCreacion.ToString("dd/MM/yyyy")
+                                    &nbsp;|&nbsp;
+                                    <span class="badge bg-secondary">@p.Estado</span>
+                                    &nbsp;|&nbsp;
+                                    <span class="fw-bold">@p.OTsCompletadas / @p.TotalOTs OTs completadas</span>
+                                </small>
+                                <div class="progress mt-2" style="height: 8px; max-width: 400px;">
+                                    <div class="progress-bar @barColor" role="progressbar" style="width: @porcentaje%"></div>
+                                </div>
+                            </div>
+                            <button class="btn btn-sm btn-outline-primary fw-bold ms-3 btn-toggle-ots"
+                                    data-id="@p.IdProyecto" data-bs-toggle="collapse" data-bs-target="#ots-@p.IdProyecto">
+                                <i class="bi bi-chevron-down"></i> Ver OTs
+                            </button>
+                        </div>
+
+                        <!-- Contenedor colapsable para las OTs (se carga con AJAX) -->
+                        <div class="collapse mt-3" id="ots-@p.IdProyecto">
+                            <div class="ots-container" data-proyecto-id="@p.IdProyecto">
+                                <div class="text-center py-3 text-muted">
+                                    <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+                                    Cargando órdenes de trabajo...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="text-center py-4 text-muted">No hay proyectos activos.</div>
+            }
+        </div>
+    </div>
+
+    @* ============================================ *@
+    @* SECCIÓN 2: PROYECTOS FINALIZADOS (Ocultos)   *@
+    @* ============================================ *@
+    <div class="text-center mb-3">
+        <button class="btn btn-outline-success fw-bold px-4" type="button" data-bs-toggle="collapse" data-bs-target="#seccionFinalizados">
+            <i class="bi bi-eye"></i> Ver Proyectos Finalizados (@Model.Finalizados.Count)
+        </button>
+    </div>
+
+    <div class="collapse mb-4" id="seccionFinalizados">
+        <div class="card shadow-sm border-success">
+            <div class="card-header bg-success text-white fw-bold">
+                <i class="bi bi-check-circle-fill"></i> Proyectos Finalizados
+            </div>
+            <div class="card-body p-0">
+                @if (Model.Finalizados.Any())
+                {
+                    @foreach (var p in Model.Finalizados)
+                    {
+                        <div class="border-bottom px-4 py-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="flex-grow-1">
+                                    <h6 class="fw-bold mb-1 text-success">
+                                        <i class="bi bi-check-circle-fill me-1"></i> @p.NomProyecto
+                                    </h6>
+                                    <small class="text-muted">
+                                        <i class="bi bi-calendar3 me-1"></i> @p.FechaCreacion.ToString("dd/MM/yyyy")
+                                        &nbsp;|&nbsp;
+                                        <span class="badge bg-success"><i class="bi bi-check-lg"></i> Finalizado</span>
+                                        &nbsp;|&nbsp;
+                                        <span class="fw-bold">@p.TotalOTs / @p.TotalOTs OTs completadas</span>
+                                    </small>
+                                    <div class="progress mt-2" style="height: 8px; max-width: 400px;">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: 100%"></div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-sm btn-outline-success fw-bold ms-3 btn-toggle-ots"
+                                        data-id="@p.IdProyecto" data-bs-toggle="collapse" data-bs-target="#ots-fin-@p.IdProyecto">
+                                    <i class="bi bi-chevron-down"></i> Ver OTs
+                                </button>
+                            </div>
+
+                            <div class="collapse mt-3" id="ots-fin-@p.IdProyecto">
+                                <div class="ots-container" data-proyecto-id="@p.IdProyecto">
+                                    <div class="text-center py-3 text-muted">
+                                        <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+                                        Cargando órdenes de trabajo...
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="text-center py-4 text-muted">No hay proyectos finalizados aún.</div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Cargar OTs por AJAX al expandir un proyecto
+        document.querySelectorAll('.btn-toggle-ots').forEach(function (btn) {
+            var loaded = false;
+            btn.addEventListener('click', function () {
+                if (loaded) return;
+                loaded = true;
+
+                var idProyecto = this.getAttribute('data-id');
+                // Buscar el contenedor de OTs más cercano al botón
+                var card = this.closest('.border-bottom');
+                var container = card.querySelector('.ots-container[data-proyecto-id="' + idProyecto + '"]');
+
+                fetch('/Proyecto/ObtenerOTs?idProyecto=' + idProyecto)
+                    .then(function (response) { return response.text(); })
+                    .then(function (html) {
+                        container.innerHTML = html;
+                    })
+                    .catch(function () {
+                        container.innerHTML = '<div class="text-center py-3 text-danger">Error al cargar las OTs.</div>';
+                    });
+            });
+        });
+    </script>
+}

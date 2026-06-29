@@ -1,0 +1,67 @@
+@model List<IngematApp.Models.ProyectoOTViewModel>
+
+@if (Model != null && Model.Any())
+{
+    <div class="list-group list-group-flush">
+        @foreach (var ot in Model)
+        {
+            var bgClass = "";
+            var textClass = "";
+            var iconClass = "";
+            var badgeClass = "";
+
+            if (ot.Estado == "Finalizada")
+            {
+                bgClass = "bg-success bg-opacity-10 border-start border-4 border-success";
+                textClass = "text-success";
+                iconClass = "bi-check-circle-fill text-success";
+                badgeClass = "bg-success";
+            }
+            else if (ot.Estado == "Guardado")
+            {
+                bgClass = "border-start border-4 border-info";
+                textClass = "";
+                iconClass = "bi-save text-info";
+                badgeClass = "bg-info";
+            }
+            else if (ot.Estado == "Asignada")
+            {
+                bgClass = "border-start border-4 border-warning";
+                textClass = "";
+                iconClass = "bi-person-check text-warning";
+                badgeClass = "bg-warning text-dark";
+            }
+            else
+            {
+                // Sin asignar
+                bgClass = "bg-light border-start border-4 border-secondary";
+                textClass = "text-muted";
+                iconClass = "bi-dash-circle text-secondary";
+                badgeClass = "bg-secondary";
+            }
+
+            <div class="list-group-item @bgClass py-2 px-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="bi @iconClass me-2 fs-5 align-middle"></i>
+                        <strong class="@textClass">@ot.N_OT</strong>
+                        <span class="ms-2 @textClass">@ot.NomOT</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        @if (!string.IsNullOrEmpty(ot.TecnicoAsignado))
+                        {
+                            <small class="text-muted">
+                                <i class="bi bi-person-fill me-1"></i>@ot.TecnicoAsignado
+                            </small>
+                        }
+                        <span class="badge @badgeClass px-2 py-1">@ot.Estado</span>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="text-center py-3 text-muted">Este proyecto no tiene órdenes de trabajo.</div>
+}

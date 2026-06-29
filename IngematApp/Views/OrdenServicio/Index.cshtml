@@ -1,0 +1,57 @@
+﻿@model IEnumerable<IngematApp.Models.OrdenServicioListado>
+@{
+    ViewData["Title"] = "Órdenes de Servicio";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-primary">Órdenes de Servicio (Operaciones)</h2>
+        <div>
+            <a asp-action="BandejaAprobacion" class="btn btn-outline-warning fw-bold me-2">⚙️ Bandeja Aprobación (Gerente)</a>
+            <a asp-action="SeleccionarProforma" class="btn btn-success fw-bold shadow-sm">+ Crear Nueva Orden</a>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-striped table-hover mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>N° OS</th>
+                        <th>Fecha</th>
+                        <th>Cliente</th>
+                        <th>Motivo del Servicio</th>
+                        <th>Empresa Asignada</th>
+                        <th>Importe Total</th>
+                        <th class="text-center">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="align-middle fw-bold">OS-@item.IdOS.ToString("D4")</td>
+                                <td class="align-middle">@item.FechaOS.ToString("dd/MM/yyyy")</td>
+                                <td class="align-middle">@item.NomCliente</td>
+                                <td class="align-middle text-muted">@item.Motivo</td>
+                                <td class="align-middle">@item.NomEmpresa</td>
+                                <td class="align-middle fw-bold">S/ @item.PrecioFinal.ToString("0.00")</td>
+                                <td class="text-center align-middle">
+                                    <span class="badge @(item.EstadoOS == "Aprobada" ? "bg-success" : "bg-warning") p-2 text-uppercase">
+                                        @item.EstadoOS
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr><td colspan="7" class="text-center py-4">No hay órdenes de servicio registradas.</td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

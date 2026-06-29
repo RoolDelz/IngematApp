@@ -1,0 +1,79 @@
+﻿@model IngematApp.Models.SubFormato
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0 fw-bold">Nuevo SubFormato</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">1. Seleccione la Categoría</label>
+                            <select id="cbxCategoria" class="form-select" onchange="filtrarFormatos()">
+                                <option value="">-- Seleccione una Categoría --</option>
+                                @foreach (var cat in ViewBag.Categorias)
+                                {
+                                    <option value="@cat.IdCategoria">@cat.NomCategoria</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="IdFormato" class="form-label fw-bold">2. Seleccione el Formato Padre</label>
+                            <select asp-for="IdFormato" id="cbxFormato" class="form-select" required>
+                                <option value="">-- Primero seleccione una categoría --</option>
+                                @foreach (var form in ViewBag.Formatos)
+                                {
+                                    <option value="@form.IdFormato" data-categoria="@form.IdCategoria" style="display:none;">
+                                        @form.NomFormato
+                                    </option>
+                                }
+                            </select>
+                            <span asp-validation-for="IdFormato" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="NomSubFormato" class="form-label fw-bold">3. Nombre del SubFormato</label>
+                            <input asp-for="NomSubFormato" class="form-control" placeholder="Ej: Registro de muestreo" required />
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                            <button type="submit" class="btn btn-success fw-bold">Guardar SubFormato</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function filtrarFormatos() {
+        var idCategoria = document.getElementById("cbxCategoria").value;
+        var cbxFormato = document.getElementById("cbxFormato");
+
+        // Recorremos las opciones del Formato (empezando del índice 1 para saltar el "-- Seleccione --")
+        for (var i = 1; i < cbxFormato.options.length; i++) {
+            var option = cbxFormato.options[i];
+
+            // Si la opción pertenece a la categoría seleccionada, la mostramos; si no, la ocultamos
+            if (option.getAttribute("data-categoria") == idCategoria) {
+                option.style.display = "block";
+            } else {
+                option.style.display = "none";
+            }
+        }
+        // Reseteamos el valor seleccionado
+        cbxFormato.value = "";
+
+        if(idCategoria == ""){
+            cbxFormato.options[0].text = "-- Primero seleccione una categoría --";
+        } else {
+            cbxFormato.options[0].text = "-- Ahora seleccione un formato --";
+        }
+    }
+</script>

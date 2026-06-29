@@ -1,0 +1,183 @@
+@model IngematApp.Models.FacturaImpresion
+@{
+    Layout = null; // Sin Layout para impresión limpia
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <title>Factura @Model.NumFactura</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        @@media print {
+            .no-print { display: none !important; }
+            body { margin: 0; padding: 0; }
+        }
+        body {
+            background-color: #f0f0f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .factura-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: white;
+            padding: 40px;
+            border: 1px solid #ddd;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        .factura-header {
+            border-bottom: 3px solid #56b39a;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+        .factura-header h1 {
+            color: #56b39a;
+            font-weight: 800;
+        }
+        .info-box {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .info-box h6 {
+            color: #56b39a;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #56b39a;
+            padding-bottom: 5px;
+        }
+        .total-box {
+            background: linear-gradient(135deg, #56b39a, #3d8b7a);
+            color: white;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .total-box .precio-final {
+            font-size: 2rem;
+            font-weight: 800;
+        }
+        .estado-badge {
+            font-size: 1rem;
+            padding: 8px 16px;
+        }
+        .detail-label {
+            font-weight: 600;
+            color: #666;
+            font-size: 0.85rem;
+        }
+        .detail-value {
+            font-weight: 500;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- BOTONES DE ACCIÓN (No se imprimen) -->
+    <div class="text-center py-3 no-print" style="background: #333;">
+        <button class="btn btn-light fw-bold px-4" onclick="window.print()">
+            <i class="bi bi-printer"></i> Imprimir Factura
+        </button>
+        <button class="btn btn-outline-light fw-bold px-4 ms-2" onclick="window.close()">
+            <i class="bi bi-x-lg"></i> Cerrar
+        </button>
+    </div>
+
+    <div class="factura-container">
+
+        <!-- ENCABEZADO -->
+        <div class="factura-header">
+            <div class="row align-items-center">
+                <div class="col-7">
+                    <h1 class="mb-1">INGEMAT</h1>
+                    <p class="text-muted mb-0">Ingeniería Geotécnica y Materiales</p>
+                </div>
+                <div class="col-5 text-end">
+                    <h3 class="fw-bold text-dark mb-1">FACTURA</h3>
+                    <span class="badge bg-primary estado-badge">@Model.NumFactura</span>
+                    <br />
+                    <small class="text-muted">Fecha: @Model.FechaFactura.ToString("dd/MM/yyyy")</small>
+                    <br />
+                    <span class="badge @(Model.Estado == "Pagado" ? "bg-success" : "bg-warning text-dark") estado-badge mt-1">
+                        @Model.Estado
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- DATOS DEL CLIENTE -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="info-box">
+                    <h6><i class="bi bi-person-vcard"></i> Datos del Cliente</h6>
+                    <p class="mb-1"><span class="detail-label">Razón Social:</span> <span class="detail-value">@Model.NomCliente</span></p>
+                    <p class="mb-1"><span class="detail-label">@Model.Documento:</span> <span class="detail-value">@Model.NDocumento</span></p>
+                    <p class="mb-1"><span class="detail-label">Teléfono:</span> <span class="detail-value">@Model.TelefonoCliente</span></p>
+                    <p class="mb-0"><span class="detail-label">Correo:</span> <span class="detail-value">@Model.CorreoCliente</span></p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="info-box">
+                    <h6><i class="bi bi-building"></i> Datos de la Empresa</h6>
+                    <p class="mb-1"><span class="detail-label">Empresa:</span> <span class="detail-value">@Model.NomEmpresa</span></p>
+                    <p class="mb-1"><span class="detail-label">RUC:</span> <span class="detail-value">@Model.Ruc</span></p>
+                    <p class="mb-0"><span class="detail-label">Dirección:</span> <span class="detail-value">@Model.DireccionEmpresa</span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- DETALLE DEL SERVICIO -->
+        <div class="info-box">
+            <h6><i class="bi bi-clipboard-data"></i> Detalle del Servicio</h6>
+            <table class="table table-sm table-bordered mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Proyecto</th>
+                        <th>Categoría</th>
+                        <th>Formato</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@Model.NomProyecto</td>
+                        <td>@Model.NomCategoria</td>
+                        <td>@Model.NomFormato</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="mt-2 mb-0"><span class="detail-label">Motivo:</span> <span class="detail-value">@Model.Motivo</span></p>
+        </div>
+
+        <!-- TOTALES -->
+        <div class="total-box">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-1"><strong>Método de Pago:</strong> @Model.MetodoPago</p>
+                    <p class="mb-1"><strong>Precio Base:</strong> S/ @Model.PrecioBase.ToString("N2")</p>
+                    @if (Model.MetodoPago == "Tarjeta Credito")
+                    {
+                        <p class="mb-0"><strong>Recargo (3%):</strong> S/ @((Model.PrecioFactura - Model.PrecioBase).ToString("N2"))</p>
+                    }
+                </div>
+                <div class="col-md-6 text-end">
+                    <span class="d-block" style="font-size: 0.9rem; opacity: 0.8;">TOTAL A PAGAR</span>
+                    <span class="precio-final">S/ @Model.PrecioFactura.ToString("N2")</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- PIE DE PÁGINA -->
+        <div class="text-center mt-4 pt-3" style="border-top: 1px dashed #ccc;">
+            <p class="text-muted small mb-0">Este documento es una representación impresa de la factura electrónica generada por el sistema INGEMAT.</p>
+        </div>
+    </div>
+
+</body>
+</html>

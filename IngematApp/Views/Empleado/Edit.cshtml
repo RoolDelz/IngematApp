@@ -1,0 +1,61 @@
+﻿@model IngematApp.Models.Empleado
+@{
+    ViewData["Title"] = "Editar Personal";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-warning">
+                <div class="card-header bg-warning text-dark">
+                    <h4 class="mb-0 fw-bold">Modificar Ficha de Personal</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit" method="post">
+                        <input type="hidden" asp-for="IdEmpleado" />
+
+                        <div class="mb-3">
+                            <label asp-for="NombreEmpleado" class="form-label fw-bold">Nombre Completo</label>
+                            <input asp-for="NombreEmpleado" class="form-control" required />
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Dni" class="form-label fw-bold">DNI</label>
+                                <input asp-for="Dni" class="form-control" maxlength="8" required />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="TelefonoEmpleado" class="form-label fw-bold">Teléfono</label>
+                                <input asp-for="TelefonoEmpleado" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="CorreoEmpleado" class="form-label fw-bold">Correo Electrónico</label>
+                            <input asp-for="CorreoEmpleado" type="email" class="form-control" required />
+                        </div>
+                        <div class="row">
+                            <div class="col-md-7 mb-4">
+                                <label asp-for="Cargo" class="form-label fw-bold">Perfil del Sistema</label>
+                                <select asp-for="Cargo" class="form-select" required>
+                                    <option value="Gerente">Gerente</option>
+                                    <option value="Area de ventas">Area de ventas</option>
+                                    <option value="Ayudante Tecnico">Ayudante Tecnico</option>
+                                </select>
+                            </div>
+                            <div class="col-md-5 mb-4">
+                                <label asp-for="Estado" class="form-label fw-bold">Estado del Usuario</label>
+                                <select asp-for="Estado" class="form-select">
+                                    <option value="true">Activo / Permitido</option>
+                                    <option value="false">Inactivo / Bloqueado</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                            <button type="submit" class="btn btn-warning fw-bold">Guardar Cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

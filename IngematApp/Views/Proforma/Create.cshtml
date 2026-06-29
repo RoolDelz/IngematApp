@@ -1,0 +1,118 @@
+﻿@model IngematApp.Models.ProformaViewModel
+
+<div class="container mt-4">
+    <div class="card shadow-sm border-primary">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0 fw-bold">Generar Nueva Cotización (Proforma)</h4>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" method="post">
+                <div class="row">
+
+                    <div class="col-md-6 border-end">
+                        <h5 class="text-secondary fw-bold mb-3"><i class="bi bi-person-badge"></i> Datos del Cliente</h5>
+
+                        <div class="mb-3">
+                            <label asp-for="NomCliente" class="form-label fw-bold">Razón Social / Nombre</label>
+                            <input asp-for="NomCliente" class="form-control" required />
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="Documento" class="form-label fw-bold">Tipo Doc.</label>
+                                <select asp-for="Documento" class="form-select">
+                                    <option value="RUC">RUC</option>
+                                    <option value="DNI">DNI</option>
+                                </select>
+                            </div>
+                            <div class="col-md-8 mb-3">
+                                <label asp-for="NDocumento" class="form-label fw-bold">N° Documento</label>
+                                <input asp-for="NDocumento" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="TelefonoCliente" class="form-label fw-bold">Teléfono</label>
+                                <input asp-for="TelefonoCliente" class="form-control" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="CorreoCliente" class="form-label fw-bold">Correo Electrónico</label>
+                                <input asp-for="CorreoCliente" type="email" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <h5 class="text-secondary fw-bold mb-3"><i class="bi bi-file-earmark-text"></i> Detalles del Servicio</h5>
+
+                        <div class="mb-3">
+                            <label asp-for="Motivo" class="form-label fw-bold">Motivo de la Cotización</label>
+                            <textarea asp-for="Motivo" class="form-control" rows="2" placeholder="Ej: Estudio de Suelos para Edificio..." required></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="DireccionProforma" class="form-label fw-bold">Dirección del Proyecto</label>
+                            <input asp-for="DireccionProforma" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-primary">1. Seleccione Categoría</label>
+                            <select asp-for="IdCategoria" id="cbxCategoria" class="form-select border-primary" onchange="filtrarFormatos()">
+                                <option value="">-- Seleccione --</option>
+                                @foreach (var cat in ViewBag.Categorias)
+                                {
+                                    <option value="@cat.IdCategoria">@cat.NomCategoria</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-primary">2. Seleccione el Formato a Cotizar</label>
+                            <select asp-for="IdFormato" id="cbxFormato" class="form-select border-primary" required>
+                                <option value="">-- Primero seleccione una categoría --</option>
+                                @foreach (var form in ViewBag.Formatos)
+                                {
+                                    <option value="@form.IdFormato" data-categoria="@form.IdCategoria" style="display:none;">
+                                        @form.NomFormato (S/ @form.PrecioFormato)
+                                    </option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="my-4" />
+                <div class="d-flex justify-content-end">
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-secondary me-2">Cancelar</a>
+                    <button type="submit" class="btn btn-primary fw-bold px-4">Generar Cotización y Guardar Cliente</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // El mismo script que usamos para subformatos
+    function filtrarFormatos() {
+        var idCategoria = document.getElementById("cbxCategoria").value;
+        var cbxFormato = document.getElementById("cbxFormato");
+
+        for (var i = 1; i < cbxFormato.options.length; i++) {
+            var option = cbxFormato.options[i];
+            if (option.getAttribute("data-categoria") == idCategoria) {
+                option.style.display = "block";
+            } else {
+                option.style.display = "none";
+            }
+        }
+        cbxFormato.value = "";
+
+        if(idCategoria == ""){
+            cbxFormato.options[0].text = "-- Primero seleccione una categoría --";
+        } else {
+            cbxFormato.options[0].text = "-- Seleccione un formato --";
+        }
+    }
+</script>

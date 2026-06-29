@@ -1,0 +1,136 @@
+﻿@model IEnumerable<IngematApp.Models.OrdenTrabajoViewModel>
+@{
+    ViewData["Title"] = "Órdenes de Trabajo";
+}
+
+<div class="container mt-4">
+    <h2 class="fw-bold text-success mb-2">📋 Gestión de Órdenes de Trabajo</h2>
+
+    @if (User.IsInRole("Gerente"))
+    {
+        <p class="text-muted mb-4">Panel de control y asignación. Aquí puedes derivar las tareas generadas automáticamente por los proyectos hacia tu equipo técnico.</p>
+    }
+    else
+    {
+        <p class="text-muted mb-4">Bandeja de tareas operativas. Revisa tus asignaciones, ejecuta el trabajo y sube tus evidencias al sistema.</p>
+    }
+
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success shadow-sm border-0 alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i> @TempData["Mensaje"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card shadow-sm border-success">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-success">
+                        <tr>
+                            <th>N° OT</th>
+                            <th>Tarea Asignada</th>
+                            <th>Proyecto</th>
+                            <th>Fecha Creación</th>
+                            <th>Estado</th>
+                            @if (User.IsInRole("Gerente"))
+                            {
+                                <th>Técnico Asignado</th>
+                            }
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="align-middle fw-bold text-secondary">@item.N_OT</td>
+                                    <td class="align-middle">@item.NomOT</td>
+                                    <td class="align-middle text-muted">@item.NomProyecto</td>
+                                    <td class="align-middle">@item.FechaCreacion.ToString("dd/MM/yyyy")</td>
+                                    <td class="align-middle">
+                                        @if (item.Estado == "Sin asignar")
+                                        {
+                                            <span class="badge bg-secondary px-2 py-1">Sin Asignar</span>
+                                        }
+                                        else if (item.Estado == "Asignada")
+                                        {
+                                            <span class="badge bg-primary px-2 py-1">En Proceso</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-success px-2 py-1">Finalizada</span>
+                                        }
+                                    </td>
+
+                                    @if (User.IsInRole("Gerente"))
+                                    {
+                                        <td class="align-middle">
+                                            @(item.TecnicoAsignado ?? "N/A")
+                                        </td>
+                                    }
+
+                                    <td class="text-center align-middle">
+                                        @if (User.IsInRole("Gerente") && item.Estado == "Sin asignar")
+                                        {
+                                            <button class="btn btn-sm btn-outline-primary fw-bold" data-bs-toggle="modal" data-bs-target="#asignarModal_@item.IdOT">
+                                                <i class="bi bi-person-plus"></i> Asignar
+                                            </button>
+
+                                            <div class="modal fade text-start" id="asignarModal_@item.IdOT" tabindex="-1">
+                                                <div class="modal-dialog">
+                                                    <form asp-action="Asignar" method="post" class="modal-content shadow">
+                                                        <div class="modal-header bg-primary text-white">
+                                                            <h5 class="modal-title fw-bold">Asignar Técnico a @item.N_OT</h5>
+                                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <input type="hidden" name="IdOT" value="@item.IdOT" />
+                                                            <div class="mb-3">
+                                                                <label class="form-label fw-bold">Seleccione el Técnico Operativo</label>
+                                                                <select name="IdEmpleado" class="form-select bg-light" required>
+                                                                    <option value="">-- Seleccionar --</option>
+                                                                    @if (ViewBag.Tecnicos != null)
+                                                                    {
+                                                                        foreach (var tec in ViewBag.Tecnicos)
+                                                                        {
+                                                                            <option value="@tec.IdEmpleado">@tec.NombreEmpleado</option>
+                                                                        }
+                                                                    }
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="submit" class="btn btn-primary fw-bold">Guardar Asignación</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        }
+                                        else if (item.Estado == "Asignada" || item.Estado == "Finalizada")
+                                        {
+                                            <a asp-action="Workspace" asp-route-id="@item.IdOT" class="btn btn-sm @(item.Estado == "Finalizada" ? "btn-outline-success" : "btn-primary") fw-bold">
+                                                <i class="bi bi-folder2-open"></i> @(item.Estado == "Finalizada" ? "Ver Workspace" : "Abrir Workspace")
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted"><i class="bi bi-dash"></i></span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr><td colspan="7" class="text-center py-4 text-muted">No se encontraron órdenes de trabajo registradas.</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

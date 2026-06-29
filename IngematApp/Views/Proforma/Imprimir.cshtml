@@ -1,0 +1,120 @@
+﻿@model IngematApp.Models.ProformaImpresion
+
+@{
+    Layout = null; // Quitamos el menú de navegación para que sea un documento limpio
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <title>Cotización PROF-@Model.IdProforma.ToString("D4")</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+            /* Oculta el botón de imprimir al generar el PDF/Papel */
+            @@media print {
+                .no-print {
+                    display: none !important;
+                }
+            }
+    </style>
+</head>
+<body class="p-5">
+
+    <div class="text-end mb-4 no-print">
+        <button onclick="window.print()" class="btn btn-primary fw-bold">🖨️ Imprimir Documento</button>
+    </div>
+
+    <div class="row border-bottom pb-4 mb-4">
+        <div class="col-6">
+            <h2 class="text-primary fw-bold">INGEMAT</h2>
+            <p class="text-muted mb-0">Soluciones en Ingeniería de Materiales</p>
+        </div>
+        <div class="col-6 text-end">
+            <h4 class="fw-bold">COTIZACIÓN N° PROF-@Model.IdProforma.ToString("D4")</h4>
+            <p class="mb-0"><strong>Fecha de Emisión:</strong> @Model.FechaP.ToString("dd/MM/yyyy")</p>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <h5 class="bg-light p-2 border fw-bold text-secondary">Datos del Cliente</h5>
+            <table class="table table-sm table-borderless">
+                <tr>
+                    <td width="20%"><strong>Razón Social:</strong></td>
+                    <td>@Model.NomCliente</td>
+                </tr>
+                <tr>
+                    <td><strong>@Model.Documento:</strong></td>
+                    <td>@Model.NDocumento</td>
+                </tr>
+                <tr>
+                    <td><strong>Teléfono:</strong></td>
+                    <td>@Model.TelefonoCliente</td>
+                </tr>
+                <tr>
+                    <td><strong>Correo:</strong></td>
+                    <td>@Model.CorreoCliente</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-12">
+            <h5 class="bg-light p-2 border fw-bold text-secondary">Descripción del Servicio Solicitado</h5>
+            <table class="table table-sm table-borderless">
+                <tr>
+                    <td width="20%"><strong>Motivo:</strong></td>
+                    <td>@Model.Motivo</td>
+                </tr>
+                <tr>
+                    <td><strong>Dirección/Proyecto:</strong></td>
+                    <td>@Model.DireccionProforma</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <table class="table table-bordered mb-5">
+        <thead class="table-dark">
+            <tr>
+                <th>Categoría</th>
+                <th>Servicio / Formato Cotizado</th>
+                <th class="text-end" width="20%">Importe (S/)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="align-middle">@Model.NomCategoria</td>
+                <td class="align-middle">@Model.NomFormato</td>
+                <td class="text-end align-middle">@Model.Total.ToString("0.00")</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="2" class="text-end fw-bold">Sub Total:</td>
+                <td class="text-end">S/ @Model.Total.ToString("0.00")</td>
+            </tr>
+            <tr>
+                <td colspan="2" class="text-end fw-bold">IGV (18%):</td>
+                <td class="text-end">S/ @((Model.PrecioFinal - Model.Total).ToString("0.00"))</td>
+            </tr>
+            <tr class="table-active">
+                <td colspan="2" class="text-end fw-bold fs-5">TOTAL A PAGAR:</td>
+                <td class="text-end fw-bold fs-5 text-success">S/ @Model.PrecioFinal.ToString("0.00")</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <div class="text-center mt-5 pt-5 border-top">
+        <p class="text-muted small">Este documento es una cotización informativa. Los precios están sujetos a variación según la ejecución final en campo.</p>
+    </div>
+
+    <script>
+            window.onload = function() {
+                window.print();
+            }
+    </script>
+</body>
+</html>

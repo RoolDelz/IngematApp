@@ -1,0 +1,116 @@
+﻿@model IngematApp.Models.WorkspaceViewModel
+@{
+    ViewData["Title"] = $"Workspace - {Model.N_OT}";
+    bool bloqueado = Model.Estado == "Finalizada";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h2 class="fw-bold text-success mb-0"><i class="bi bi-folder-fill text-warning"></i> Workspace: @Model.N_OT</h2>
+            <p class="text-muted mb-0"><strong>Proyecto:</strong> @Model.NomProyecto | <strong>Tarea:</strong> @Model.NomOT</p>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Volver</a>
+    </div>
+
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success shadow-sm alert-dismissible"><i class="bi bi-check-circle"></i> @TempData["Mensaje"]<button class="btn-close" data-bs-dismiss="alert"></button></div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger shadow-sm alert-dismissible"><i class="bi bi-exclamation-triangle"></i> @TempData["Error"]<button class="btn-close" data-bs-dismiss="alert"></button></div>
+    }
+
+    <div class="row">
+        <div class="col-md-5">
+            <div class="card shadow-sm border-primary mb-3">
+                <div class="card-header bg-primary text-white fw-bold">
+                    <i class="bi bi-journal-text"></i> Bloc de Notas (@(Model.N_OT).txt)
+                </div>
+                <div class="card-body">
+                    <form asp-action="GuardarWorkspace" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="IdOT" value="@Model.IdOT" />
+
+                        <div class="mb-3">
+                            <label class="form-label text-muted small">Comentarios y Observaciones (Se guardará como archivo .txt)</label>
+                            <textarea name="ComentariosTexto" class="form-control bg-light" rows="10" @(bloqueado ? "readonly" : "") placeholder="Escribe aquí los apuntes técnicos del campo...">@Model.ComentariosTexto</textarea>
+                        </div>
+
+                        @if (!bloqueado)
+                        {
+                            <hr />
+                            <div class="mb-3">
+                                <label class="form-label fw-bold"><i class="bi bi-paperclip"></i> Adjuntar Evidencias (Max 5MB c/u)</label>
+                                <input type="file" name="ArchivosNuevos" class="form-control" multiple accept=".pdf,.jpg,.jpeg,.png,.docx,.doc,.xls,.xlsx" />
+                                <small class="text-muted">Formatos: Imágenes, PDF, Word, Excel.</small>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100 fw-bold"><i class="bi bi-save"></i> Guardar Progreso</button>
+                        }
+                    </form>
+                </div>
+            </div>
+
+            @if (!bloqueado && User.IsInRole("Ayudante Tecnico"))
+            {
+                <form asp-action="FinalizarOT" method="post" onsubmit="return confirm('¿Estás seguro de finalizar esta tarea? Ya no podrás editarla.');">
+                    <input type="hidden" name="idOt" value="@Model.IdOT" />
+                    <button type="submit" class="btn btn-success w-100 fw-bold py-2"><i class="bi bi-check-all"></i> Finalizar Tarea Operativa</button>
+                </form>
+            }
+        </div>
+
+        <div class="col-md-7">
+            <div class="card shadow-sm border-success">
+                <div class="card-header bg-success text-white fw-bold">
+                    <i class="bi bi-files"></i> Archivos en Carpeta Dinámica
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Archivo</th>
+                                <th>Tipo</th>
+                                <th>Fecha</th>
+                                <th class="text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Archivos.Any())
+                            {
+                                foreach (var arch in Model.Archivos)
+                                {
+                                    <tr>
+                                        <td class="text-truncate" style="max-width: 200px;" title="@arch.NombreArchivo">@arch.NombreArchivo</td>
+                                        <td>
+                                            <span class="badge bg-secondary text-uppercase">@arch.Extension.Replace(".", "")</span>
+                                        </td>
+                                        <td class="small">@arch.FechaSubida.ToString("dd/MM/yyyy HH:mm")</td>
+                                        <td class="text-center">
+                                            <a href="@arch.RutaArchivo" target="_blank" class="btn btn-sm btn-outline-info" title="Ver / Descargar"><i class="bi bi-eye"></i></a>
+
+                                            @if (!bloqueado)
+                                            {
+                                                <form asp-action="EliminarArchivo" method="post" class="d-inline" onsubmit="return confirm('¿Eliminar archivo permanentemente?');">
+                                                    <input type="hidden" name="idReporte" value="@arch.IdReporte" />
+                                                    <input type="hidden" name="rutaArchivo" value="@arch.RutaArchivo" />
+                                                    <input type="hidden" name="idOt" value="@Model.IdOT" />
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar"><i class="bi bi-trash"></i></button>
+                                                </form>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr><td colspan="4" class="text-center py-4 text-muted">Aún no hay archivos adjuntos en este directorio.</td></tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

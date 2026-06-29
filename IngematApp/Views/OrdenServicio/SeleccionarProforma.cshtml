@@ -1,0 +1,51 @@
+﻿@model IEnumerable<IngematApp.Models.ProformaListado>
+@{
+    ViewData["Title"] = "Seleccionar Cotización";
+}
+
+<div class="container mt-4">
+    <h3 class="fw-bold text-primary mb-3">Paso 1: Seleccione una Cotización Pendiente</h3>
+    <p class="text-muted">A continuación se muestran únicamente las proformas aprobadas por los clientes que aún no cuentan con una Orden de Servicio operativa asignada.</p>
+
+    <div class="card shadow-sm border-success">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="table-success">
+                    <tr>
+                        <th>N° Proforma</th>
+                        <th>Fecha Emisión</th>
+                        <th>Cliente / Razón Social</th>
+                        <th>Motivo</th>
+                        <th>Monto Total</th>
+                        <th class="text-center">Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="align-middle fw-bold">PROF-@item.IdProforma.ToString("D4")</td>
+                                <td class="align-middle">@item.FechaP.ToString("dd/MM/yyyy")</td>
+                                <td class="align-middle fw-bold">@item.NomCliente</td>
+                                <td class="align-middle text-muted">@item.Motivo</td>
+                                <td class="align-middle fw-bold text-success">S/ @item.PrecioFinal.ToString("0.00")</td>
+                                <td class="text-center align-middle">
+                                    <a asp-action="Create" asp-route-idProforma="@item.IdProforma" class="btn btn-sm btn-primary fw-bold">
+                                        Seleccionar
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr><td colspan="6" class="text-center py-4">Todas las cotizaciones ya cuentan con una Orden de Servicio generada.</td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="mt-3"><a asp-action="Index" class="btn btn-secondary">Regresar al Historial</a></div>
+</div>

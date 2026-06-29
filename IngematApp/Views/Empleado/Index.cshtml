@@ -1,0 +1,69 @@
+﻿@model IEnumerable<IngematApp.Models.Empleado>
+@{
+    ViewData["Title"] = "Control de Personal";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-primary">Gestión de Personal (Usuarios)</h2>
+        <a asp-action="Create" class="btn btn-success fw-bold shadow-sm">+ Registrar Nuevo Personal</a>
+    </div>
+
+    <div class="mb-3 d-flex justify-content-end">
+        <form asp-controller="Empleado" asp-action="ListarEmpleadosPorNombre" method="get" class="d-flex">
+            <input type="text" name="pNombre" class="form-control me-2" placeholder="Buscar por nombre..." />
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </form>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-striped table-hover mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre del Empleado</th>
+                        <th>DNI (Contraseña)</th>
+                        <th>Teléfono</th>
+                        <th>Correo (Usuario)</th>
+                        <th>Perfil Asignado</th>
+                        <th class="text-center">Estado</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="align-middle">@item.IdEmpleado</td>
+                                <td class="align-middle fw-bold">@item.NombreEmpleado</td>
+                                <td class="align-middle"><code class="text-dark">@item.Dni</code></td>
+                                <td class="align-middle">@item.TelefonoEmpleado</td>
+                                <td class="align-middle">@item.CorreoEmpleado</td>
+                                <td class="align-middle"><span class="badge bg-primary">@item.Cargo</span></td>
+                                <td class="text-center align-middle">
+                                    <span class="badge @(item.Estado ? "bg-success" : "bg-danger")">
+                                        @(item.Estado ? "Activo" : "Inactivo")
+                                    </span>
+                                </td>
+                                <td class="text-center align-middle">
+                                    <a asp-action="Edit" asp-route-id="@item.IdEmpleado" class="btn btn-sm btn-warning fw-bold">Editar</a>
+                                    @if (item.Estado)
+                                    {
+                                        <a asp-action="Delete" asp-route-id="@item.IdEmpleado" class="btn btn-sm btn-danger fw-bold" onclick="return confirm('¿Desactivar el acceso al sistema de este empleado?');">Baja</a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr><td colspan="8" class="text-center py-4">No hay personal registrado en el sistema.</td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

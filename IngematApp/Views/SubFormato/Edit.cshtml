@@ -1,0 +1,112 @@
+﻿@model IngematApp.Models.SubFormato
+
+@{
+    ViewData["Title"] = "Editar SubFormato";
+
+    // Recuperamos el ID de la Categoría Padre que mandamos desde el Controlador
+    var idCategoriaActual = ViewBag.IdCategoriaSeleccionada;
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-warning text-dark">
+                    <h4 class="mb-0 fw-bold">Editar SubFormato</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit" method="post">
+
+                        <!-- EL ID OCULTO: Obligatorio para que el Update sepa a quién modificar -->
+                        <input type="hidden" asp-for="IdSubFormato" />
+
+                        <!-- PASO 1: SELECCIONAR CATEGORÍA -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">1. Categoría</label>
+                            <select id="cbxCategoria" class="form-select" onchange="filtrarFormatos(true)">
+                                <option value="">-- Seleccione una Categoría --</option>
+                                @foreach (var cat in ViewBag.Categorias)
+                                {
+                                    // Comparamos para dejar preseleccionada la categoría correcta
+                                    if (idCategoriaActual != null && (int)idCategoriaActual == cat.IdCategoria)
+                                    {
+                                        <option value="@cat.IdCategoria" selected>@cat.NomCategoria</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@cat.IdCategoria">@cat.NomCategoria</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <!-- PASO 2: SELECCIONAR FORMATO -->
+                        <div class="mb-3">
+                            <label asp-for="IdFormato" class="form-label fw-bold">2. Formato Padre</label>
+                            <!-- asp-for automáticamente preselecciona la opción correcta en base al modelo -->
+                            <select asp-for="IdFormato" id="cbxFormato" class="form-select" required>
+                                <option value="">-- Seleccione un Formato --</option>
+                                @foreach (var form in ViewBag.Formatos)
+                                {
+                                    <option value="@form.IdFormato" data-categoria="@form.IdCategoria" style="display:none;">
+                                        @form.NomFormato
+                                    </option>
+                                }
+                            </select>
+                            <span asp-validation-for="IdFormato" class="text-danger"></span>
+                        </div>
+
+                        <!-- PASO 3: NOMBRE DEL SUBFORMATO -->
+                        <div class="mb-3">
+                            <label asp-for="NomSubFormato" class="form-label fw-bold">3. Nombre del SubFormato</label>
+                            <input asp-for="NomSubFormato" class="form-control" required />
+                            <span asp-validation-for="NomSubFormato" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                            <button type="submit" class="btn btn-warning fw-bold">Actualizar SubFormato</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // La variable "resetear" nos permite saber si el usuario hizo clic (true)
+    // o si la página apenas está cargando (false).
+    function filtrarFormatos(resetear) {
+        var idCategoria = document.getElementById("cbxCategoria").value;
+        var cbxFormato = document.getElementById("cbxFormato");
+
+        for (var i = 1; i < cbxFormato.options.length; i++) {
+            var option = cbxFormato.options[i];
+
+            if (option.getAttribute("data-categoria") == idCategoria) {
+                option.style.display = "block";
+            } else {
+                option.style.display = "none";
+            }
+        }
+
+        // Solo limpiamos la selección si el usuario cambió la categoría a mano
+        if (resetear) {
+            cbxFormato.value = "";
+        }
+    }
+
+    // Apenas cargue la página, ejecutamos el filtro para mostrar solo los
+    // formatos de esa categoría, PERO le mandamos 'false' para que no borre
+    // el formato que viene de la base de datos.
+    window.onload = function() {
+        filtrarFormatos(false);
+    };
+</script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

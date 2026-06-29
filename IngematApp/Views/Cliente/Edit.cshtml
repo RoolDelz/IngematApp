@@ -1,0 +1,65 @@
+﻿@model IngematApp.Models.Cliente
+
+@{
+    ViewData["Title"] = "Editar Cliente";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-warning text-dark">
+                    <h4 class="mb-0 fw-bold">Modificar Datos del Cliente</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit" method="post">
+
+                        <input type="hidden" asp-for="IdCliente" />
+
+                        <div class="mb-3">
+                            <label asp-for="NomCliente" class="form-label fw-bold">Razón Social / Nombre Completo</label>
+                            <input asp-for="NomCliente" class="form-control" required />
+                            <span asp-validation-for="NomCliente" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="Documento" class="form-label fw-bold">Tipo Doc.</label>
+                                <select asp-for="Documento" class="form-select">
+                                    <option value="RUC">RUC</option>
+                                    <option value="DNI">DNI</option>
+                                </select>
+                            </div>
+                            <div class="col-md-8 mb-3">
+                                <label asp-for="NDocumento" class="form-label fw-bold">N° Documento</label>
+                                <input asp-for="NDocumento" class="form-control" required />
+                                <span asp-validation-for="NDocumento" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="TelefonoCliente" class="form-label fw-bold">Teléfono</label>
+                            <input asp-for="TelefonoCliente" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="CorreoCliente" class="form-label fw-bold">Correo Electrónico</label>
+                            <input asp-for="CorreoCliente" type="email" class="form-control" />
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                            <button type="submit" class="btn btn-warning fw-bold">Actualizar Datos</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

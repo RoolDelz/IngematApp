@@ -1,0 +1,52 @@
+﻿@model IEnumerable<IngematApp.Models.SubFormato>
+@{
+    ViewData["Title"] = "Listar SubFormatos";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4 fw-bold text-primary">Listado de SubFormatos</h2>
+
+    <div class="mb-3 d-flex justify-content-between">
+        <a asp-action="Create" class="btn btn-success fw-bold">+ Crear Nuevo SubFormato</a>
+
+        <form asp-controller="SubFormato" asp-action="ListarSubFormatosPorNombre" method="get" class="d-flex">
+            <label class="me-2 align-self-center fw-bold">Buscar:</label>
+            <input type="text" name="pNombre" class="form-control me-2" placeholder="Nombre de subformato..." />
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </form>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-striped table-hover mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Categoría</th>
+                        <th>Formato Padre</th>
+                        <th>Nombre del SubFormato</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="align-middle">@item.IdSubFormato</td>
+                                <td class="align-middle text-muted">@item.NombreCategoria</td>
+                                <td class="align-middle fw-bold text-secondary">@item.NombreFormato</td>
+                                <td class="align-middle">@item.NomSubFormato</td>
+                                <td class="text-center">
+                                    <a asp-action="Edit" asp-route-id="@item.IdSubFormato" class="btn btn-sm btn-warning fw-bold">Editar</a>
+                                    <a asp-action="Delete" asp-route-id="@item.IdSubFormato" class="btn btn-sm btn-danger fw-bold" onclick="return confirm('¿Eliminar subformato?');">Eliminar</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,25 @@
+# Build results
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+launchSettings.json
+
+# Archivos subidos por usuarios
+wwwroot/ArchivosOT/*
+!wwwroot/ArchivosOT/.gitkeep
+
+# NuGet
+*.nupkg
+packages/
+
+# OS files
+Thumbs.db
+.DS_Store
