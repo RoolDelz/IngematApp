@@ -114,6 +114,7 @@
                             </a>
                         </li>
                     }
+                }
 
                 @if (User.IsInRole("Gerente") || User.IsInRole("Sub Gerente") || User.IsInRole("Area de ventas"))
                 {
@@ -139,9 +140,6 @@
                             </a>
                         </li>
                     }
-                }
-
-
 
                 
                 @if (User.IsInRole("Gerente") || User.IsInRole("Sub Gerente"))
