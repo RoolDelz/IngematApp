@@ -1,4 +1,4 @@
-﻿@model IEnumerable<IngematApp.Models.Empleado>
+@model IEnumerable<IngematApp.Models.Empleado>
 @{
     ViewData["Title"] = "Control de Personal";
 }
@@ -8,6 +8,14 @@
         <h2 class="fw-bold text-primary">Gestión de Personal (Usuarios)</h2>
         <a asp-action="Create" class="btn btn-success fw-bold shadow-sm">+ Registrar Nuevo Personal</a>
     </div>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+            <strong><i class="bi bi-exclamation-triangle-fill"></i> Acción denegada:</strong> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
 
     <div class="mb-3 d-flex justify-content-end">
         <form asp-controller="Empleado" asp-action="ListarEmpleadosPorNombre" method="get" class="d-flex">
@@ -49,8 +57,19 @@
                                     </span>
                                 </td>
                                 <td class="text-center align-middle">
-                                    <a asp-action="Edit" asp-route-id="@item.IdEmpleado" class="btn btn-sm btn-warning fw-bold">Editar</a>
-                                    @if (item.Estado)
+                                    @{
+                                        var currentUserId = User.FindFirst("IdEmpleado")?.Value;
+                                        var currentUserRole = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+                                        bool isSelf = currentUserId == item.IdEmpleado.ToString();
+                                        bool isSubgerenteTryingToEditGerente = (currentUserRole == "Sub Gerente" && item.Cargo == "Gerente");
+                                    }
+                                    
+                                    @if (!isSubgerenteTryingToEditGerente)
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@item.IdEmpleado" class="btn btn-sm btn-warning fw-bold">Editar</a>
+                                    }
+                                    
+                                    @if (item.Estado && !isSelf && !isSubgerenteTryingToEditGerente)
                                     {
                                         <a asp-action="Delete" asp-route-id="@item.IdEmpleado" class="btn btn-sm btn-danger fw-bold" onclick="return confirm('¿Desactivar el acceso al sistema de este empleado?');">Baja</a>
                                     }
