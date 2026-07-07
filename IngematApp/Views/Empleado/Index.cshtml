@@ -61,15 +61,15 @@
                                         var currentUserId = User.FindFirst("IdEmpleado")?.Value;
                                         var currentUserRole = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
                                         bool isSelf = currentUserId == item.IdEmpleado.ToString();
-                                        bool isSubgerenteTryingToEditGerente = (currentUserRole == "Sub Gerente" && item.Cargo == "Gerente");
+                                        bool isSubgerenteBlocked = (currentUserRole == "Sub Gerente" && (item.Cargo == "Gerente" || item.Cargo == "Sub Gerente"));
                                     }
                                     
-                                    @if (!isSubgerenteTryingToEditGerente)
+                                    @if (!isSubgerenteBlocked && !isSelf)
                                     {
                                         <a asp-action="Edit" asp-route-id="@item.IdEmpleado" class="btn btn-sm btn-warning fw-bold">Editar</a>
                                     }
                                     
-                                    @if (item.Estado && !isSelf && !isSubgerenteTryingToEditGerente)
+                                    @if (item.Estado && !isSelf && !isSubgerenteBlocked)
                                     {
                                         <a asp-action="Delete" asp-route-id="@item.IdEmpleado" class="btn btn-sm btn-danger fw-bold" onclick="return confirm('¿Desactivar el acceso al sistema de este empleado?');">Baja</a>
                                     }

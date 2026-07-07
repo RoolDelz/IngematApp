@@ -36,8 +36,10 @@
                             <div class="col-md-7 mb-4">
                                 <label asp-for="Cargo" class="form-label fw-bold">Perfil del Sistema</label>
                                 <select asp-for="Cargo" class="form-select" required>
-                                    <option value="Gerente">Gerente</option>
-                                    <option value="Sub Gerente">Sub Gerente</option>
+                                    @if (User.IsInRole("Gerente"))
+                                    {
+                                        <option value="Sub Gerente">Sub Gerente</option>
+                                    }
                                     <option value="Area de ventas">Area de ventas</option>
                                     <option value="Ayudante Tecnico">Ayudante Tecnico</option>
                                 </select>
