@@ -1,4 +1,4 @@
-﻿@model IEnumerable<IngematApp.Models.OrdenTrabajoViewModel>
+@model IEnumerable<IngematApp.Models.OrdenTrabajoViewModel>
 @{
     ViewData["Title"] = "Órdenes de Trabajo";
 }
@@ -6,7 +6,7 @@
 <div class="container mt-4">
     <h2 class="fw-bold text-success mb-2">📋 Gestión de Órdenes de Trabajo</h2>
 
-    @if (User.IsInRole("Gerente"))
+    @if (User.IsInRole("Gerente") || User.IsInRole("Sub Gerente"))
     {
         <p class="text-muted mb-4">Panel de control y asignación. Aquí puedes derivar las tareas generadas automáticamente por los proyectos hacia tu equipo técnico.</p>
     }
@@ -34,7 +34,7 @@
                             <th>Proyecto</th>
                             <th>Fecha Creación</th>
                             <th>Estado</th>
-                            @if (User.IsInRole("Gerente"))
+                            @if (User.IsInRole("Gerente") || User.IsInRole("Sub Gerente"))
                             {
                                 <th>Técnico Asignado</th>
                             }
@@ -66,7 +66,7 @@
                                         }
                                     </td>
 
-                                    @if (User.IsInRole("Gerente"))
+                                    @if (User.IsInRole("Gerente") || User.IsInRole("Sub Gerente"))
                                     {
                                         <td class="align-middle">
                                             @(item.TecnicoAsignado ?? "N/A")
@@ -74,7 +74,7 @@
                                     }
 
                                     <td class="text-center align-middle">
-                                        @if (User.IsInRole("Gerente") && item.Estado == "Sin asignar")
+                                        @if ((User.IsInRole("Gerente") || User.IsInRole("Sub Gerente")) && item.Estado == "Sin asignar")
                                         {
                                             <button class="btn btn-sm btn-outline-primary fw-bold" data-bs-toggle="modal" data-bs-target="#asignarModal_@item.IdOT">
                                                 <i class="bi bi-person-plus"></i> Asignar

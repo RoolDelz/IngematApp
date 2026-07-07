@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using IngematApp.DAO;
 using IngematApp.Models;
@@ -6,7 +6,7 @@ using IngematApp.Models;
 namespace IngematApp.Controllers
 {
     // Candado para que temporalmente solo un Gerente administre este módulo
-    [Authorize(Roles = "Gerente")]
+    [Authorize(Roles = "Gerente, Sub Gerente")]
     public class EmpleadoController : Controller
     {
         private readonly EmpleadoDAO _empleadoDAO;

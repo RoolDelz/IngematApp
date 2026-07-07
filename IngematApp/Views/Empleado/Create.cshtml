@@ -1,4 +1,4 @@
-﻿@model IngematApp.Models.Empleado
+@model IngematApp.Models.Empleado
 @{ ViewData["Title"] = "Registrar Personal"; }
 
 <div class="container mt-4">
@@ -33,6 +33,7 @@
                             <select asp-for="Cargo" class="form-select border-primary" required>
                                 <option value="">-- Seleccione Perfil --</option>
                                 <option value="Gerente">Gerente</option>
+                                <option value="Sub Gerente">Sub Gerente</option>
                                 <option value="Area de ventas">Area de ventas</option>
                                 <option value="Ayudante Tecnico">Ayudante Tecnico</option>
                             </select>

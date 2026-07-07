@@ -1,4 +1,4 @@
-﻿using IngematApp.DAO;
+using IngematApp.DAO;
 using IngematApp.Models;
 using Microsoft.AspNetCore.Authorization; // 1. IMPORTANTE: Agregar esta librería
 using Microsoft.AspNetCore.Mvc;
@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace IngematApp.Controllers
 {
     // 2. AQUÍ VA EL AUTHORIZE. Bloquea todo el controlador excepto para estos roles.
-    [Authorize(Roles = "Gerente")]
+    [Authorize(Roles = "Gerente, Sub Gerente")]
     public class CategoriaController : Controller
     {
         private readonly CategoriaDAO _categoriaDAO;

@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewData["Title"] = "Inicio";
 
     // Extraemos la información del usuario logueado de la memoria del sistema
@@ -30,11 +30,11 @@
         </div>
 
         <div class="col-md-6">
-            @if (cargo == "Gerente")
+            @if (cargo == "Gerente" || cargo == "Sub Gerente")
             {
                 <div class="alert alert-success h-100 shadow-sm border-0">
                     <h4 class="fw-bold"><i class="bi bi-shield-lock me-2"></i> Acceso Total</h4>
-                    <p>Como Gerente de INGEMAT, posees permisos administrativos absolutos. Puedes gestionar el directorio de clientes, aprobar órdenes de servicio, administrar al personal de la empresa y configurar los formatos de los estudios de suelos.</p>
+                    <p>Como @(cargo) de INGEMAT, posees permisos administrativos absolutos. Puedes gestionar el directorio de clientes, aprobar órdenes de servicio, administrar al personal de la empresa y configurar los formatos de los estudios de suelos.</p>
                 </div>
             }
             else if (cargo == "Area de ventas")

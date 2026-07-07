@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using IngematApp.DAO;
 using IngematApp.Models;
 
 namespace IngematApp.Controllers
 {
-    [Authorize(Roles = "Gerente, Area de ventas")]
+    [Authorize(Roles = "Gerente, Sub Gerente, Area de ventas")]
     public class ProformaController : Controller
     {
         private readonly ProformaDAO _proformaDAO;

@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using IngematApp.DAO;
 using IngematApp.Models;
 
 namespace IngematApp.Controllers
 {
-    [Authorize(Roles = "Gerente")]
+    [Authorize(Roles = "Gerente, Sub Gerente")]
     public class FormatoController : Controller
     {
         private readonly FormatoDAO _formatoDAO;

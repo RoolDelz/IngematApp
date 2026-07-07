@@ -5,7 +5,7 @@ using System.Security.Claims;
 
 namespace IngematApp.Controllers
 {
-    [Authorize(Roles = "Gerente, Ayudante Tecnico")]
+    [Authorize(Roles = "Gerente, Sub Gerente, Ayudante Tecnico")]
     public class OrdenTrabajoController : Controller
     {
         private readonly OrdenTrabajoDAO _dao;
@@ -22,7 +22,7 @@ namespace IngematApp.Controllers
             // Obtener el rol del usuario logueado por Claims
             var rol = User.FindFirst(ClaimTypes.Role)?.Value;
 
-            if (rol == "Gerente")
+            if (rol == "Gerente" || rol == "Sub Gerente")
             {
                 ViewBag.Tecnicos = _dao.ListarTecnicos();
                 return View(_dao.ListarParaGerente());
@@ -38,7 +38,7 @@ namespace IngematApp.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Gerente")]
+        [Authorize(Roles = "Gerente, Sub Gerente")]
         public IActionResult Asignar(int IdOT, int IdEmpleado)
         {
             _dao.AsignarTecnico(IdOT, IdEmpleado);

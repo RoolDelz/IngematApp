@@ -1,4 +1,4 @@
-﻿@model IEnumerable<IngematApp.Models.OrdenServicioListado>
+@model IEnumerable<IngematApp.Models.OrdenServicioListado>
 @{
     ViewData["Title"] = "Órdenes de Servicio";
 }
@@ -7,7 +7,10 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold text-primary">Órdenes de Servicio (Operaciones)</h2>
         <div>
-            <a asp-action="BandejaAprobacion" class="btn btn-outline-warning fw-bold me-2">⚙️ Bandeja Aprobación (Gerente)</a>
+            @if (User.IsInRole("Gerente") || User.IsInRole("Sub Gerente"))
+            {
+                <a asp-action="BandejaAprobacion" class="btn btn-outline-warning fw-bold me-2">⚙️ Bandeja Aprobación (Gerencia)</a>
+            }
             <a asp-action="SeleccionarProforma" class="btn btn-success fw-bold shadow-sm">+ Crear Nueva Orden</a>
         </div>
     </div>

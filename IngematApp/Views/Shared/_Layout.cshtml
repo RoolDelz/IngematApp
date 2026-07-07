@@ -97,11 +97,11 @@
 
 
 
-                @if (User.IsInRole("Gerente") || User.IsInRole("Area de ventas") || User.IsInRole("Ayudante Tecnico"))
+                @if (User.IsInRole("Gerente") || User.IsInRole("Sub Gerente") || User.IsInRole("Ayudante Tecnico"))
                 {
                     <li class="nav-item px-3 mb-2 text-uppercase text-secondary small fw-bold mt-4">Operaciones</li>
 
-                    @if (User.IsInRole("Gerente") || User.IsInRole("Ayudante Tecnico"))
+                    @if (User.IsInRole("Gerente") || User.IsInRole("Sub Gerente") || User.IsInRole("Ayudante Tecnico"))
                     {
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="OrdenTrabajo" asp-action="Index">
@@ -115,9 +115,9 @@
                         </li>
                     }
 
-                    @if (User.IsInRole("Gerente") || User.IsInRole("Area de ventas"))
-                    {
-                        <li class="nav-item px-3 mb-2 text-uppercase text-secondary small fw-bold mt-4">Comercial</li>
+                @if (User.IsInRole("Gerente") || User.IsInRole("Sub Gerente") || User.IsInRole("Area de ventas"))
+                {
+                    <li class="nav-item px-3 mb-2 text-uppercase text-secondary small fw-bold mt-4">Comercial</li>
                         /*<li class="nav-item">
                             <a class="nav-link" asp-controller="Cliente" asp-action="Index">
                                 <i class="bi bi-person-vcard me-2 fs-5 align-middle"></i> Directorio Clientes
@@ -144,7 +144,7 @@
 
 
                 
-                @if (User.IsInRole("Gerente"))
+                @if (User.IsInRole("Gerente") || User.IsInRole("Sub Gerente"))
                 {
                     <li class="nav-item px-3 mb-2 text-uppercase text-secondary small fw-bold mt-4">Configuración</li>
                     <li class="nav-item">

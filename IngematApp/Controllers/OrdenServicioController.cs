@@ -1,11 +1,11 @@
-﻿using IngematApp.DAO;
+using IngematApp.DAO;
 using IngematApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IngematApp.Controllers
 {
-    [Authorize(Roles = "Gerente, Area de ventas")]
+    [Authorize(Roles = "Gerente, Sub Gerente, Area de ventas")]
     public class OrdenServicioController : Controller
     {
         private readonly OrdenServicioDAO _osDAO;
@@ -53,7 +53,7 @@ namespace IngematApp.Controllers
             return View("Create", modelo);
         }
 
-        [Authorize(Roles = "Gerente")]
+        [Authorize(Roles = "Gerente, Sub Gerente")]
         // Pantalla 4: Bandeja de Aprobación para Gerente
         public IActionResult BandejaAprobacion()
         {
@@ -61,7 +61,7 @@ namespace IngematApp.Controllers
         }
 
 
-        [Authorize(Roles = "Gerente")]
+        [Authorize(Roles = "Gerente, Sub Gerente")]
         // Pantalla 4: Procesar Aprobación (POST)
         [HttpPost]
         public IActionResult ProcessAprobacion(int idOS)

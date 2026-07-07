@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IngematApp.Controllers
 {
-    [Authorize(Roles = "Gerente, Ayudante Tecnico")]
+    [Authorize(Roles = "Gerente, Sub Gerente, Ayudante Tecnico")]
     public class ProyectoController : Controller
     {
         private readonly ProyectoDAO _dao;

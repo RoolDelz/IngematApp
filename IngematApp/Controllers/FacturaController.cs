@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IngematApp.Controllers
 {
-    [Authorize(Roles = "Gerente, Area de ventas")]
+    [Authorize(Roles = "Gerente, Sub Gerente, Area de ventas")]
     public class FacturaController : Controller
     {
         private readonly FacturaDAO _dao;
